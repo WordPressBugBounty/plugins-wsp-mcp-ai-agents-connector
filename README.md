@@ -1,0 +1,1 @@
+# plugins-wsp-mcp-ai-agents-connector
