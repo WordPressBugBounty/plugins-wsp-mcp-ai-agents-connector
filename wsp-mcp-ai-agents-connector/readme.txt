@@ -4,15 +4,15 @@ Tags: mcp, ai, claude, model context protocol, woocommerce
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.9.1
+Stable tag: 2.9.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Expose your WordPress site to AI agents (Claude, Cursor, and other MCP clients) through a built-in MCP server — no companion plugin required.
+Free WordPress MCP plugin: connect Claude, Cursor, and any AI agent to your site through a built-in MCP server — no companion plugin required.
 
 == Description ==
 
-WSP MCP - AI Agents Connector turns your WordPress site into a Model Context Protocol (MCP) server. AI clients can read and edit posts, pages, categories, tags, media, comments, users, and (when installed) Yoast SEO meta and Elementor page content — all under granular, per-ability admin control.
+WSP MCP - AI Agents Connector is a free WordPress plugin that turns your WordPress site into a Model Context Protocol (MCP) server. AI clients can read and edit posts, pages, categories, tags, media, comments, users, and (when installed) Yoast SEO meta and Elementor page content — all under granular, per-ability admin control.
  
 The plugin ships its **own native MCP server**. You do not need the WordPress MCP Adapter or any companion plugin: activate, copy your connection details from **MCP > Connection**, and connect. WooCommerce tools (products, orders, refunds, coupons, customers, reports) are available when WooCommerce is active, Advanced Custom Fields tools (field groups, fields, values, post types, taxonomies, options pages) when ACF is active, Ultimate Addons for Elementor (UAE) tools (widgets, templates, layout building, and settings) when UAE is active, and Gravity Forms tools (forms, entries, notifications, and confirmations) when Gravity Forms is active.
  
@@ -118,6 +118,10 @@ Every tool is individually toggleable in **MCP > Settings**, and all write tools
 
 == Frequently Asked Questions ==
 
+= Is WSP MCP a free WordPress MCP plugin? =
+
+Yes. WSP MCP is a free WordPress plugin released under the GPL. The MCP server, both authentication methods, the Audit Log, the Analytics dashboard, and every tool listed above are included — no account or external service is needed to run it.
+
 = Do I need the WordPress MCP Adapter plugin? =
 
 No. This plugin includes its own MCP server and connects directly. As of v2.2 the older MCP Adapter / Abilities-API compatibility path has been removed; connect using the native endpoint shown on **MCP > Connection**.
@@ -149,6 +153,9 @@ Watch the step-by-step video tutorial:
 https://youtu.be/hxhjs3IUYQE
 
 == Changelog ==
+
+= 2.9.2 =
+* Minor updates.
 
 = 2.9.1 =
 * New: Create User and Update User tools. Create User auto-generates a password if none is supplied and defaults the role to subscriber; Update User edits email, display name, role, or password. Require `create_users` / `edit_users`. OFF by default.
@@ -265,6 +272,9 @@ https://youtu.be/hxhjs3IUYQE
 * Elementor abilities, modular architecture, auto config generator.
 
 == Upgrade Notice ==
+
+= 2.9.2 =
+Minor updates. No action needed.
 
 = 2.9.1 =
 Adds eight tools for users, site settings, plugin activation, and themes. All new tools are OFF by default — enable them from MCP > Settings if you want them. No action needed otherwise.
