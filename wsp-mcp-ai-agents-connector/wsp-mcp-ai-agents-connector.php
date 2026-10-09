@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WSP MCP - Free MCP Plugin for WordPress: Connect Claude, ChatGPT & AI Agents
  * Description: Connect Claude, ChatGPT, Cursor & any AI agent to WordPress. Manage posts, pages, media, SEO, WooCommerce, Elementor & more by chat — 200+ tools, you choose which are on. Free.
- * Version: 2.9.4
+ * Version: 2.9.5
  * Requires at least: 6.9
  * Requires PHP: 7.4
  * Author: WebSensePro
@@ -14,7 +14,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'WSP_MCP_VERSION', '2.9.4' );
+define( 'WSP_MCP_VERSION', '2.9.5' );
 define( 'WSP_MCP_OPTION', 'wsp_mcp_abilities' );
 define( 'WSP_MCP_DIR', plugin_dir_path( __FILE__ ) );
 
@@ -28,9 +28,11 @@ wsp_mcp_output_guard_start();
 
 require_once WSP_MCP_DIR . 'includes/dependency.php';
 require_once WSP_MCP_DIR . 'includes/registry.php';
+require_once WSP_MCP_DIR . 'includes/context.php';
 require_once WSP_MCP_DIR . 'includes/admin/promo-cards.php';
 require_once WSP_MCP_DIR . 'includes/admin/settings-page.php';
 require_once WSP_MCP_DIR . 'includes/admin/connection-page.php';
+require_once WSP_MCP_DIR . 'includes/admin/context-page.php';
 require_once WSP_MCP_DIR . 'includes/admin/audit-log-page.php';
 require_once WSP_MCP_DIR . 'includes/admin/analytics-page.php';
 require_once WSP_MCP_DIR . 'includes/admin/about-page.php';
@@ -43,6 +45,7 @@ require_once WSP_MCP_DIR . 'includes/server/class-oauth-store.php';
 require_once WSP_MCP_DIR . 'includes/server/class-oauth-server.php';
 require_once WSP_MCP_DIR . 'includes/server/class-auth.php';
 require_once WSP_MCP_DIR . 'includes/server/class-mcp-server.php';
+require_once WSP_MCP_DIR . 'includes/tools/admin-tool-defs.php';
 require_once WSP_MCP_DIR . 'includes/tools/native-tools.php';
 require_once WSP_MCP_DIR . 'includes/abilities/guard.php';
 require_once WSP_MCP_DIR . 'includes/abilities/posts.php';
@@ -63,6 +66,9 @@ require_once WSP_MCP_DIR . 'includes/abilities/health.php';
 require_once WSP_MCP_DIR . 'includes/abilities/yoast.php';
 require_once WSP_MCP_DIR . 'includes/abilities/rankmath.php';
 require_once WSP_MCP_DIR . 'includes/abilities/elementor.php';
+require_once WSP_MCP_DIR . 'includes/abilities/woocommerce-catalog.php'; // shared Woo helpers + catalog tools (before woocommerce.php)
+require_once WSP_MCP_DIR . 'includes/abilities/woocommerce-store.php';
+require_once WSP_MCP_DIR . 'includes/abilities/plugins.php';
 require_once WSP_MCP_DIR . 'includes/abilities/woocommerce.php';
 require_once WSP_MCP_DIR . 'includes/abilities/acf.php'; // Included ACF Pro Abilities
 require_once WSP_MCP_DIR . 'includes/abilities/uae.php'; // Included UAE Abilities

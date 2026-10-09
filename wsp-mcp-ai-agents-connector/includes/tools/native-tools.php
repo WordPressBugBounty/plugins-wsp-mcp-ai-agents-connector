@@ -19,6 +19,18 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function wsp_mcp_register_native_tools() {
 	$obj = array( 'type' => 'object', 'properties' => new stdClass() );
 
+	// ---- Site Context (MCP > Context) — advertised only while the admin's switch is on and a document has content ----
+	WSP_MCP_Server::register_tool( 'wsp_get_site_context', array(
+		'description' => 'READ THIS FIRST. Returns the site administrator\'s AGENTS.md (how this site is built and the rules to follow) and CHANGELOG.md (what changed and why). Call once at the start of a session instead of exploring the site with other tools.',
+		'inputSchema' => array( 'type' => 'object', 'properties' => array(
+			'file' => array( 'type' => 'string', 'description' => 'all (default) | agents | changelog.' ),
+		) ),
+		'callback'        => 'wsp_execute_get_site_context',
+		'capability'      => '',
+		'enable_key'      => '',
+		'active_callback' => 'wsp_mcp_context_is_active',
+	) );
+
 	// ---- Posts ----
 	WSP_MCP_Server::register_tool( 'wsp_get_posts', array(
 		'description' => 'Returns blog posts with full metadata.',
@@ -131,8 +143,9 @@ function wsp_mcp_register_native_tools() {
 		'enable_key'  => 'wsp/get-categories',
 	) );
 	WSP_MCP_Server::register_tool( 'wsp_create_category', array(
-		'description' => 'Creates a new category.',
+		'description' => 'Creates a new category (taxonomy "category", or "product_cat" for WooCommerce product categories).',
 		'inputSchema' => array( 'type' => 'object', 'required' => array( 'name' ), 'properties' => array(
+			'taxonomy'    => array( 'type' => 'string', 'description' => 'category (default) | product_cat.' ),
 			'name'        => array( 'type' => 'string' ),
 			'description' => array( 'type' => 'string' ),
 			'parent'      => array( 'type' => 'integer' ),
@@ -334,7 +347,7 @@ function wsp_mcp_register_native_tools() {
 		'enable_key'  => 'wsp/get-site-info',
 	) );
 	WSP_MCP_Server::register_tool( 'wsp_get_plugins', array(
-		'description' => 'Lists active plugins with name, version, and author.',
+		'description' => 'Lists installed plugins with name, version, author, active status and update availability (active_plugins = active only; plugins = all).',
 		'inputSchema' => $obj,
 		'callback'    => 'wsp_execute_get_plugins',
 		'capability'  => 'activate_plugins',
@@ -379,6 +392,8 @@ function wsp_mcp_register_native_tools() {
 		'capability'  => 'activate_plugins',
 		'enable_key'  => 'wsp/deactivate-plugin',
 	) );
+
+	wsp_mcp_register_defs( wsp_mcp_plugin_admin_tool_defs() ); // v2.9.5: install / install-from-url / delete / update
 
 	// ---- Themes ----
 	WSP_MCP_Server::register_tool( 'wsp_get_themes', array(
@@ -858,16 +873,22 @@ function wsp_mcp_register_native_tools() {
 				'image_url'     => array( 'type' => 'string', 'description' => 'Direct image URL to download and set as product featured image.' ),
 				'attributes'    => array(
 					'type' => 'array',
-					'description' => 'Attributes for variable products. Array of objects containing "name" and "options" array. E.g. [{"name": "color", "options": ["Red", "Blue"]}]',
+					'description' => 'Product attributes (any product type; replaces existing). Custom: {"name":"Color","options":["Red","Blue"]}. Global: {"attribute_id":2,"options":["Red"]} or {"taxonomy":"pa_color",...} (missing terms are created). Optional visible (default true) and variation (default true for variable products, false otherwise).',
 					'items' => array(
 						'type' => 'object',
 						'properties' => array(
-							'name'    => array( 'type' => 'string' ),
-							'options' => array( 'type' => 'array', 'items' => array( 'type' => 'string' ) ),
+							'name'         => array( 'type' => 'string' ),
+							'attribute_id' => array( 'type' => 'integer' ),
+							'taxonomy'     => array( 'type' => 'string' ),
+							'options'      => array( 'type' => 'array', 'items' => array( 'type' => 'string' ) ),
+							'visible'      => array( 'type' => 'boolean' ),
+							'variation'    => array( 'type' => 'boolean' ),
 						)
 					)
 				),
 				'stock_qty'     => array( 'type' => 'integer', 'description' => 'Manage stock quantity.' ),
+				'categories'    => array( 'type' => 'array', 'items' => array( 'type' => 'integer' ), 'description' => 'Product category term IDs (see wsp_woo_get_product_categories). Replaces existing.' ),
+				'tags'          => array( 'type' => 'array', 'items' => array( 'type' => 'integer' ), 'description' => 'Product tag term IDs (see wsp_woo_get_product_tags). Replaces existing.' ),
 			) ),
 			'callback'    => 'wsp_execute_woo_create_product',
 			'capability'  => 'publish_posts',
@@ -897,6 +918,9 @@ function wsp_mcp_register_native_tools() {
 				'description'   => array( 'type' => 'string', 'description' => 'Product description.' ),
 				'sku'           => array( 'type' => 'string', 'description' => 'Unique SKU.' ),
 				'stock_qty'     => array( 'type' => 'integer', 'description' => 'Manage stock quantity.' ),
+				'categories'    => array( 'type' => 'array', 'items' => array( 'type' => 'integer' ), 'description' => 'Product category term IDs (see wsp_woo_get_product_categories). Replaces existing.' ),
+				'tags'          => array( 'type' => 'array', 'items' => array( 'type' => 'integer' ), 'description' => 'Product tag term IDs (see wsp_woo_get_product_tags). Replaces existing.' ),
+				'attributes'    => array( 'type' => 'array', 'description' => 'Replace product attributes (same format as wsp_woo_create_product).', 'items' => array( 'type' => 'object' ) ),
 				'stock_status'  => array( 'type' => 'string', 'description' => 'instock | outofstock.' ),
 				'image_url'     => array( 'type' => 'string', 'description' => 'Direct image URL to download and replace featured image.' ),
 			) ),
@@ -1005,6 +1029,7 @@ function wsp_mcp_register_native_tools() {
 			'capability'  => 'edit_posts',
 			'enable_key'  => 'wsp/woo-moderate-review',
 		) );
+		wsp_mcp_register_defs( wsp_mcp_woo_admin_tool_defs() ); // v2.9.5: delete / taxonomy / attributes / settings / tax / shipping / gateways
 	}
 
 	// ---- Elementor (only when Elementor is active) ----

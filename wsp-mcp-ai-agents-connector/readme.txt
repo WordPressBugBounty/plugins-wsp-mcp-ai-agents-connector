@@ -4,7 +4,7 @@ Tags: mcp, ai, claude, chatgpt, ai agent
 Requires at least: 6.9
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.9.4
+Stable tag: 2.9.5
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -38,6 +38,7 @@ MCP (Model Context Protocol) is the standard way AI assistants connect to other 
 * **100% free.** Every feature and every tool, no paid version.
 * **Easy to connect.** A Connection page with ready-made setup for Claude, Cursor, Codex, Antigravity, OpenClaw and OpenCode, with copy and download buttons. Cursor users can connect in one click.
 * **Safe by default.** Only read-only tools are on when you install. You pick what else the AI can do.
+* **Teach the AI your site.** Write an AGENTS.md and CHANGELOG.md once; connected AIs read them first instead of exploring your whole site.
 * **See everything the AI did.** The Audit Log records every action: what, when, and by whom.
 * **Usage dashboard.** See how often the AI is used, which tools are most popular, and how fast they respond.
 * **Your data stays on your site.** Logs and stats are stored in your own database, never sent anywhere.
@@ -120,6 +121,13 @@ Watch the step-by-step video tutorial:
 https://youtu.be/hxhjs3IUYQE
 
 == Changelog ==
+
+= 2.9.5 =
+* New: Site Context — a new MCP > Context page where you write AGENTS.md (how your site is built and the rules to follow) and CHANGELOG.md (what changed and why). Turn on "Enable Site Context" (off by default) and every connected AI reads them first, so it doesn't have to explore your whole site. This saves time and tokens. Also available through the `wsp_get_site_context` tool and as MCP resources. Reconnect your AI app after editing. Don't put passwords or keys in these documents.
+* New: WooCommerce store management — 34 tools. Delete products, variations, coupons, categories and tags (products, variations and coupons go to the trash unless you ask for permanent deletion). Manage product categories, tags, global attributes and attribute terms. Read and update WooCommerce settings, tax classes and rates, shipping zones and methods, and payment gateways. Create and update products can now set categories, tags and attributes. Passwords, keys and tokens are always masked and never written back.
+* New: Plugin management — Install Plugin from WordPress.org (`wsp_install_plugin`), Install Plugin From URL (`wsp_install_plugin_from_url`, https .zip only), Delete Plugin (`wsp_delete_plugin`, must be deactivated first) and Update Plugin (`wsp_update_plugin`). They use WordPress's own installer and require the `install_plugins`, `delete_plugins` and `update_plugins` capabilities (administrators; respects DISALLOW_FILE_MODS).
+* Improved: Read Plugins (`wsp_get_plugins`) now lists every installed plugin with its active state and available update. Create Category (`wsp_create_category`) can also create WooCommerce product categories.
+* All new tools are OFF by default.
 
 = 2.9.4 =
 * New: Site Editor ability group for block (Full Site Editing) themes — six tools. Read Global Styles (`wsp_get_global_styles`) returns the site's theme.json customizations or the merged effective values, and can list the theme's style variations. Update Global Styles (`wsp_update_global_styles`) deep-merges new colors, typography, spacing and block styles, or applies a style variation. List / Read / Create / Update Template (`wsp_get_templates`, `wsp_get_template`, `wsp_create_template`, `wsp_update_template`) manage block templates and template parts (header, footer, …). All require `edit_theme_options` and are OFF by default. Custom CSS cannot be set through these tools, and template content is filtered with `wp_kses_post()`.
@@ -251,6 +259,9 @@ https://youtu.be/hxhjs3IUYQE
 * Elementor abilities, modular architecture, auto config generator.
 
 == Upgrade Notice ==
+
+= 2.9.5 =
+Adds Site Context (MCP > Context, off by default): give your AI an AGENTS.md and CHANGELOG.md to read first. Also adds 34 WooCommerce store-management tools (delete, categories, tags, attributes, settings, tax, shipping, payment gateways) and 4 plugin-management tools (install, install from URL, delete, update). All new tools are OFF by default — enable them from MCP > Settings if you want them.
 
 = 2.9.4 =
 Adds a Site Editor tool group (Global Styles + block templates, 6 tools) for block themes , a Widgets & Sidebars tool group (8 tools) for classic themes, a Site Health, Cron & Error Log tool group (6 tools), and an Upload / Install Theme tool for AI-generated themes. All new tools are OFF by default — enable them from MCP > Settings if you want them.
